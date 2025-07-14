@@ -1494,8 +1494,8 @@ footer {
 
   .slider-card {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
+    align-items: start;
     flex-direction: column;
     width: 366px;
     row-gap: 36px;
