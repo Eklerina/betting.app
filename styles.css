@@ -1711,7 +1711,7 @@ footer {
   flex-direction: column;
   justify-content: center;
   align-items: start;
-min-width: 272px;
+width: 272px;
 height: 338px;
 margin: 0px 24px;
 
