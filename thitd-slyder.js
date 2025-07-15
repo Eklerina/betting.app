@@ -1,41 +1,47 @@
-const sliderTrack = document.querySelector('.slider-review-track');
-const sliderCards = document.querySelectorAll('.slider-reviews-card');
-const prevArrow = document.querySelector('.slider-review-arrow.prev');
-const nextArrow = document.querySelector('.slider-review-arrow.next');
+document.addEventListener('DOMContentLoaded', function() {
+  const track = document.querySelector('.slider-review-track');
+  const cards = document.querySelectorAll('.slider-reviews-card');
+  const prevBtn = document.querySelector('.slider-review-arrow-prev');
+  const nextBtn = document.querySelector('.slider-review-arrow-next');
 
-let currentIndex = 0;
-const visibleCards = 2;
-const totalCards = sliderCards.length;
+  // Рассчитываем ширину одной карточки + margin (если есть)
+  const cardStyle = window.getComputedStyle(cards[0]);
+  const cardMarginRight = parseFloat(cardStyle.marginRight);
+  const cardWidth = cards[0].offsetWidth + cardMarginRight;
 
-function getCardWidthWithGap() {
-  const cardStyle = window.getComputedStyle(sliderCards[0]);
-  const cardWidth = sliderCards[0].offsetWidth;
-  const gap = parseInt(cardStyle.getPropertyValue('column-gap')) || 20;
-  return cardWidth + gap;
-}
+  track.style.width = `${cardWidth * cards.length}px`;
 
-function updateSlider() {
-  const cardWidthWithGap = getCardWidthWithGap();
-  const offset = -currentIndex * cardWidthWithGap;
-  sliderTrack.style.transform = `translateX(${offset}px)`;
-  prevArrow.disabled = currentIndex === 0;
-  nextArrow.disabled = currentIndex >= totalCards - visibleCards;
-}
+  let currentPosition = 0;
+  const visibleCards = 1; 
 
-prevArrow.addEventListener('click', () => {
-  if (currentIndex > 0) {
-    currentIndex--;
-    updateSlider();
+  function moveSlider() {
+    track.style.transform = `translateX(${currentPosition}px)`;
+    
+    prevBtn.disabled = currentPosition === 0;
+    nextBtn.disabled = currentPosition <= -(cardWidth * (cards.length - visibleCards));
   }
+
+  nextBtn.addEventListener('click', function() {
+   
+    currentPosition -= cardWidth;
+   
+    if (currentPosition < -((cards.length - visibleCards) * cardWidth)) {
+      currentPosition = -((cards.length - visibleCards) * cardWidth);
+    }
+    
+    moveSlider();
+  });
+
+  prevBtn.addEventListener('click', function() {
+  
+    currentPosition += cardWidth;
+ 
+    if (currentPosition > 0) {
+      currentPosition = 0;
+    }
+    
+    moveSlider();
+  });
+
+  moveSlider();
 });
-
-nextArrow.addEventListener('click', () => {
-  if (currentIndex < totalCards - visibleCards) {
-    currentIndex++;
-    updateSlider();
-  }
-});
-
-updateSlider();
-
-window.addEventListener('resize', updateSlider);
